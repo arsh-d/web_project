@@ -1,50 +1,50 @@
-import uuid
+from models import providerDB, Provider
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel
-from typing import List,Optional
-
-
 
 app = FastAPI()
 
-providerDB=[]
-
-class Provider(BaseModel):
-    providerID: uuid.UUID
-    active: Optional[bool] = True
-    name: str
-    qualification: List[str] = []
-    speciality: List[str] = []
-    phone: List[str] = []
-    department: Optional[str]
-    organization: str
-    location: Optional[str]
-    address: str
-
-
-
 @app.get("/providers")
-def read_root():
+def read_root() -> list:
+    """
+        returns the entire database.
+    """
     return providerDB
 
+
 @app.get("/providers/{provider_id}")
-def get_by_ID(provider_id: int):
+def get_by_ID(provider_id: int) -> dict:
+    """ 
+        returns provider by passed provider index in the list.
+    """
     return providerDB[provider_id]
 
+
 @app.post("/post_provider")
-def push_data(provider: Provider):
+def push_data(provider: Provider) -> dict:
+    """
+        inserts new provider into the database.
+    """
     providerDB.append(provider.dict())
     return {"provider":providerDB[-1]}
 
+
 @app.delete("/provider/{provider_id}")
-def delete_provider(provider_id: int):
+def delete_provider(provider_id: int) -> dict:
+    """
+        delete the provider at the given index.
+    """
     provider = providerDB.pop(provider_id)
     return {"msg": "post has been deleted",
             "provider": provider}
 
+
 @app.put("/providers/update/{provider_id}")
-def update_provider(provider_id: int, provider: Provider):
+def update_provider(provider_id: int, provider: Provider) -> dict:
+    """
+        updates the provider of given index.
+    """
+
     encoded_provider = jsonable_encoder(provider)
     providerDB[provider_id] = encoded_provider
     return encoded_provider
