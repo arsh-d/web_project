@@ -1,4 +1,4 @@
-from models import providerDB, Provider
+from models import create_provider, update_provider, providerDB, Provider
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 
@@ -21,12 +21,12 @@ def get_by_ID(provider_id: int) -> dict:
 
 
 @app.post("/post_provider")
-def push_data(provider: Provider) -> dict:
+def push_data(provider: create_provider) -> dict:
     """
         inserts new provider into the database.
     """
     providerDB.append(provider.dict())
-    return {"provider":providerDB[-1]}
+    return {"provider": providerDB[-1]}
 
 
 @app.delete("/provider/{provider_id}")
@@ -40,7 +40,7 @@ def delete_provider(provider_id: int) -> dict:
 
 
 @app.put("/providers/update/{provider_id}")
-def update_provider(provider_id: int, provider: Provider) -> dict:
+def put_provider(provider_id: int, provider: update_provider) -> dict:
     """
         updates the provider of given index.
     """
