@@ -1,8 +1,30 @@
 from pydantic import BaseModel
 from typing import List, Optional
 from uuid import UUID
+import pickle
 
-providerDB = []
+# cursor =  open('provider_data.pkl', 'rb')
+# providerDB = pickle.load(cursor)
+
+def open_for_reading(filename='provider_data.pkl'):
+
+    with open(filename, 'rb') as file:
+        try:
+            data = pickle.load(file)
+        except EOFError:
+            print("reading error")
+    return data
+
+def open_for_writing(filename='provider_data.pkl', data=None):
+
+    if data:
+        try:
+            with open(filename, 'wb') as file:
+                pickle.dump(data, file)
+        except :
+            print("writting error")
+
+# providerDB = []
 
 class provider_base(BaseModel):
     name: str
