@@ -6,7 +6,7 @@ import pickle
 # cursor =  open('provider_data.pkl', 'rb')
 # providerDB = pickle.load(cursor)
 
-def open_for_reading(filename='provider_data.pkl'):
+def open_for_reading(filename='provider_data.pkl') -> dict:
 
     with open(filename, 'rb') as file:
         try:
@@ -28,9 +28,9 @@ def open_for_writing(filename='provider_data.pkl', data=None):
 
 class provider_base(BaseModel):
     name: str
-    qualification: List[str] = []
-    speciality: List[str] = []
-    phone: List[str] = []
+    qualification: str
+    speciality: str
+    phone: str
     department: Optional[str]
     organization: str
     location: Optional[str]
