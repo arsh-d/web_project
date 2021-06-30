@@ -71,7 +71,10 @@ def put_provider(provider_id: str, provider: update_provider) -> dict:
         updates the provider of given ID.
     """
     provider_data = open_for_reading()
-    encoded_provider = jsonable_encoder(provider)
-    provider_data[provider_id] = encoded_provider
-    open_for_writing(data=provider_data)
-    return encoded_provider
+    if provider_data:
+        encoded_provider = jsonable_encoder(provider)
+        provider_data[provider_id] = encoded_provider
+        open_for_writing(data=provider_data)
+        return encoded_provider
+    else:
+        return {"message": "data not updated"}
