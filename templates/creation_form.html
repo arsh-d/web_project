@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <form action="/create_provider_form" method="post">
+            <!-- provider_id:UUID = Form(...),
+            name:str = Form(...),
+            qualification:str = Form(...),
+            speciality:str = Form(...),
+            phone:str = Form(...),
+            department:str = Form(...),
+            organization:str = Form(...),
+            location:str = Form(...),
+            address:str = Form(...),
+            active:bool = Form): -->
+            <div><input name=provider_id type="text" value="3fa85f64-5717-4562-b3fc-2c963f66afa6" required></div>
+            <div><input type="text" name="name" placeholder="name" required></div>
+            <div><input type="text" name="qualification" placeholder="qualification" required></div>
+            <div><input type="text" name="speciality" placeholder="speciality" required></div>
+            <div><input type="text" name="phone" placeholder="phone" required></div>
+            <div><input type="text" name="department" placeholder="department"></div>
+            <div><input type="text" name="organization" placeholder="organization"></div>
+            <div><input type="text" name="location" placeholder="location"></div>
+            <div><input type="text" name="address" placeholder="address" required></div>
+            <div><input type="text" name="active" placeholder="active" value="True" required></div>
+            <div><button type="submit">Submit</button></div>
+        </form>
+    </div>
+</body>
+</html>

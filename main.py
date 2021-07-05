@@ -1,80 +1,126 @@
-from models import create_provider, update_provider, open_for_writing, open_for_reading
+from typing import Optional
+from uuid import UUID
+from fastapi import Request
+from fastapi import Form
+from fastapi.routing import run_endpoint_function
+from starlette.responses import RedirectResponse
+from models import open_for_reading, open_for_writing
 from fastapi import FastAPI
-from fastapi.encoders import jsonable_encoder
+from fastapi.templating import Jinja2Templates
+from routers import providers
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+app.mount("/static",StaticFiles(directory="static"), name="static")
 
+app.include_router(providers.router)
+
+@app.get("/")
+def home(request: Request):
+    message = "hello"
+    return templates.TemplateResponse("index.html", {'request': request,
+                                                     'message': message})
 
 
 @app.get("/providers")
-def read_root() -> list:
+def read_root(request: Request) -> list:
     """
         returns the entire dictionary.
     """
     provider_data = open_for_reading()
     if provider_data:
-        return provider_data
+        return templates.TemplateResponse("display_provider.html", {"request": request, 
+                                                                    "provider_data": provider_data})
     else:
         return {"message": "database empty"}
 
-@app.get("/providers/{provider_id}")
-def get_by_ID(provider_id: str) -> dict:
-    """ 
-        returns provider by passed provider id in the dictionary.
-    """
-    provider_data = open_for_reading()
-    if provider_id in provider_data.keys():
-        return provider_data[provider_id]
-    else:
-        return {"message": "provider does not exists"}
+@app.get("/provider_search_form")
+def search(request: Request):
+    return templates.TemplateResponse("search_form.html", {"request": request})
 
+@app.get("/search_provider")
+def search_provider(provider_id: UUID):
+    url = f'/api/providers/{provider_id}'
+    return RedirectResponse(url=url)
 
-@app.post("/post_provider")
-def push_data(provider: create_provider) -> dict:
-    """
-        inserts new provider into the dictionary.
-    """
-    # provider_data = {}
-    provider_data = open_for_reading()
-    if provider_data:
-        new_id = str(provider.providerID)
-        new_dict = provider.dict()
-        new_dict.pop('providerID')
-        provider_data[new_id] = new_dict
-        #provider_data[provider.providerID] = {key:val for key, val in new_dict.items() if key != provider.providerID}
-        #provider_data.append(provider.dict())
-        open_for_writing(data=provider_data)
-        return {"provider": provider.dict()}
-    else:
-        return {"message": "cannot push data"}
+@app.get("/create_provider_form")
+def render_creation_form(request: Request):
+    return templates.TemplateResponse("creation_form.html",{'request': request})
 
+# {
+#   "name": "string",
+#   "qualification": "string",
+#   "speciality": "string",
+#   "phone": "string",
+#   "department": "string",
+#   "organization": "string",
+#   "location": "string",
+#   "address": "string",
+#   "providerID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+#   "active": true
+# }
 
-@app.delete("/provider/{provider_id}")
-def delete_provider(provider_id: str) -> dict:
-    """
-        delete the provider of given ID.
-    """
+@app.post("/create_provider_form")
+def create_provider(provider_id:UUID = Form(...),
+                    name:str = Form(...),
+                    qualification:str = Form(...),
+                    speciality:str = Form(...),
+                    phone:str = Form(...),
+                    department:Optional[str] = Form("N/A"),
+                    organization:str = Form(...),
+                    location:Optional[str] = Form("N/A"),
+                    address:str = Form(...),
+                    active:bool = Form):
     
+    post_data = {
+        "name": name,
+        "qualification": qualification,
+        "speciality": speciality,
+        "phone": phone,
+        "department": department,
+        "organization": organization,
+        "location": location,
+        "address": address,
+        "active": active
+        }
+    provider_data = open_for_reading()
+    provider_data[provider_id] = post_data
+    open_for_writing(data=provider_data)
+
+    return {'msg': 'updated'}
+
+
+@app.get("/delete_provider_form")
+def render_deletion_form(request: Request):
+    provider_data = open_for_reading()
+    return templates.TemplateResponse("deletion_form.html", {'request': request, "provider_data": provider_data})
+
+@app.post("/delete_provider")
+def delete_provider(provider_id:UUID = Form(...)):
     provider_data = open_for_reading()
     if provider_data:
         del_data = provider_data.pop(provider_id)
         open_for_writing(data=provider_data)
-        return {"msg": "post has been deleted",
-                "provider": del_data}
-    else:
-        return {"message": "error in deleting"}
+        return {"data": del_data}
+    return {'data': provider_id}
 
 
-@app.put("/providers/update/{provider_id}")
-def put_provider(provider_id: str, provider: update_provider) -> dict:
-    """
-        updates the provider of given ID.
-    """
-    provider_data = open_for_reading()
-    if provider_data:
-        encoded_provider = jsonable_encoder(provider)
-        provider_data[provider_id] = encoded_provider
-        open_for_writing(data=provider_data)
-        return encoded_provider
-    else:
-        return {"message": "data not updated"}
+
+
+
+# @app.put("/provider/update/{provider_id}")
+# def put_provider(provider_id: str, provider: update_provider) -> dict:
+#     """
+#         updates the provider of given ID.
+#     """
+#     provider_data = open_for_reading()
+#     if provider_data:
+#         encoded_provider = jsonable_encoder(provider)
+#         provider_data[provider_id] = encoded_provider
+#         open_for_writing(data=provider_data)
+#         return encoded_provider
+#     else:
+#         return {"message": "data not updated"}
+
+

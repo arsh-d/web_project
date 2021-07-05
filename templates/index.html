@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/index.css') }}">
+</head>
+<body>
+    <div class="heading">
+        <h2>Welcome to home page !</h2>
+    </div>
+    <div class="container">
+        <div class="select-button">
+            <a href="/providers">List all providers</a>
+        </div>
+    
+        <div class="select-button">
+            <a href="/provider_search_form">Search provider by Id</a>
+        </div>
+    
+        <div class="select-button">
+            <a href="/create_provider_form">Create provider</a>
+        </div>
+    
+        <div class="select-button">
+            <a href="/delete_provider_form">Delete provider</a>
+        </div>
+    </div>
+    
+</body>
+</html>
