@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/update_provider" method="POST">
+        <div><input type="text" name="provider_id" value="{{ provider_id }}" required></div>
+            <div><input type="text" name="name" value="{{ provider_data['name'] }}" required></div>
+            <div><input type="text" name="qualification" value="{{ provider_data['qualification'] }}" required></div>
+            <div><input type="text" name="speciality" value="{{ provider_data['speciality'] }}" required></div>
+            <div><input type="text" name="phone" value="{{ provider_data['phone'] }}" required></div>
+            <div><input type="text" name="department" value="{{ provider_data['department'] }}"></div>
+            <div><input type="text" name="organization" value="{{ provider_data['organization'] }}"></div>
+            <div><input type="text" name="location" value="{{ provider_data['location'] }}"></div>
+            <div><input type="text" name="address" value="{{ provider_data['address'] }}" required></div>
+            <div><input type="text" name="active" value="{{ provider_data['active'] }}" value="True" required></div>
+            <button type="submit">Update</button>
+    </form>
+</body>
+</html>

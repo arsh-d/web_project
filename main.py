@@ -71,7 +71,7 @@ def create_provider(provider_id:UUID = Form(...),
                     organization:str = Form(...),
                     location:Optional[str] = Form("N/A"),
                     address:str = Form(...),
-                    active:bool = Form):
+                    active:bool = Form(...)):
     
     post_data = {
         "name": name,
@@ -85,7 +85,7 @@ def create_provider(provider_id:UUID = Form(...),
         "active": active
         }
     provider_data = open_for_reading()
-    provider_data[provider_id] = post_data
+    provider_data[str(provider_id)] = post_data
     open_for_writing(data=provider_data)
 
     return {'msg': 'updated'}
@@ -100,14 +100,61 @@ def render_deletion_form(request: Request):
 def delete_provider(provider_id:UUID = Form(...)):
     provider_data = open_for_reading()
     if provider_data:
-        del_data = provider_data.pop(provider_id)
+        del_data = provider_data.pop(str(provider_id))
         open_for_writing(data=provider_data)
         return {"data": del_data}
     return {'data': provider_id}
 
 
 
+@app.get("/update_provider_form")
+def render_selection_menu(request: Request):
+    provider_data = open_for_reading()
+    return templates.TemplateResponse("update_provider_form.html", {"request": request, "provider_data": provider_data})
 
+
+@app.post("/select_update_provider")
+def render_update_form(request: Request, provider_id:UUID = Form(...)):
+
+    provider_data = open_for_reading()
+    print(type(provider_id))
+    data_to_update = provider_data[str(provider_id)]
+
+    return templates.TemplateResponse("updation_form.html", {"request": request, "provider_id": provider_id, "provider_data": data_to_update})
+
+
+
+@app.post("/update_provider")
+def update_provider(provider_id:UUID = Form(...),
+                    name:str = Form(...),
+                    qualification:str = Form(...),
+                    speciality:str = Form(...),
+                    phone:str = Form(...),
+                    department:Optional[str] = Form("N/A"),
+                    organization:str = Form(...),
+                    location:Optional[str] = Form("N/A"),
+                    address:str = Form(...),
+                    active:bool = Form(...)):
+
+    post_data = {
+        "name": name,
+        "qualification": qualification,
+        "speciality": speciality,
+        "phone": phone,
+        "department": department,
+        "organization": organization,
+        "location": location,
+        "address": address,
+        "active": active
+        }
+    provider_data = open_for_reading()
+    provider_data[str(provider_id)] = post_data
+    open_for_writing(data=provider_data)
+    return {"msg": "updated"}
+
+# @app.post("update_provider")
+# def update_provider(provider_id:UUID = Form(...)):
+#     provider_data = 
 
 # @app.put("/provider/update/{provider_id}")
 # def put_provider(provider_id: str, provider: update_provider) -> dict:
