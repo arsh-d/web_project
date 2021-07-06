@@ -1,0 +1,38 @@
+a {
+  display: block;
+  color: white;
+  text-decoration: none;
+}
+
+.heading {
+  display: flex;
+  justify-content: center;
+}
+
+.select-button {
+    background-color: rgb(201, 25, 25);
+    color: white;
+    padding: 1em 1.5em;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+  }
+
+.select-button:hover {
+  background-color: rgba(102, 196, 84, 0.979);
+  color: white;
+  padding: 1em 1.5em;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.container{
+  display: flex;
+  justify-content: space-between;
+  height: 500px;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+}

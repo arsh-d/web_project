@@ -7,9 +7,9 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/search_provider" method="post">
-        <input type="text" name="provider_id"/>
-        <button type="submit">Search</button>
-    </form>
+    <h4>{{ provider_id }}</h4>
+    {% for item in provider_data %}
+        <h5>{{ item }} : {{ provider_data[item] }}</h5>
+    {% endfor %}
 </body>
 </html>

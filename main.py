@@ -1,16 +1,13 @@
 from typing import Optional
 from uuid import UUID
-from fastapi import Request
-from fastapi import Form
-from fastapi.routing import run_endpoint_function
-from starlette.responses import RedirectResponse
+from fastapi import  FastAPI, Request, Form
 from models import open_for_reading, open_for_writing
-from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
 from routers import providers
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
 templates = Jinja2Templates(directory="templates")
 app.mount("/static",StaticFiles(directory="static"), name="static")
 
@@ -37,29 +34,25 @@ def read_root(request: Request) -> list:
 
 @app.get("/provider_search_form")
 def search(request: Request):
+    """renders the page for entering providerID"""
     return templates.TemplateResponse("search_form.html", {"request": request})
 
-@app.get("/search_provider")
-def search_provider(provider_id: UUID):
-    url = f'/api/providers/{provider_id}'
-    return RedirectResponse(url=url)
+@app.post("/search_provider")
+def search_provider(request: Request, provider_id:UUID = Form(...)):
+    """renders details of the given provider with it ID"""
+    provider_data = open_for_reading()
+    try :
+        data = provider_data[str(provider_id)]
+    except KeyError:
+        return {"message": "invalid provider ID"}
+    return templates.TemplateResponse("provider_details.html", {"request": request,
+                                                                "provider_id": provider_id,
+                                                                "provider_data": data})
 
 @app.get("/create_provider_form")
 def render_creation_form(request: Request):
     return templates.TemplateResponse("creation_form.html",{'request': request})
 
-# {
-#   "name": "string",
-#   "qualification": "string",
-#   "speciality": "string",
-#   "phone": "string",
-#   "department": "string",
-#   "organization": "string",
-#   "location": "string",
-#   "address": "string",
-#   "providerID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-#   "active": true
-# }
 
 @app.post("/create_provider_form")
 def create_provider(provider_id:UUID = Form(...),
@@ -103,7 +96,7 @@ def delete_provider(provider_id:UUID = Form(...)):
         del_data = provider_data.pop(str(provider_id))
         open_for_writing(data=provider_data)
         return {"data": del_data}
-    return {'data': provider_id}
+    return {'data': f'invalid ID : {provider_id}'}
 
 
 
@@ -152,22 +145,6 @@ def update_provider(provider_id:UUID = Form(...),
     open_for_writing(data=provider_data)
     return {"msg": "updated"}
 
-# @app.post("update_provider")
-# def update_provider(provider_id:UUID = Form(...)):
-#     provider_data = 
 
-# @app.put("/provider/update/{provider_id}")
-# def put_provider(provider_id: str, provider: update_provider) -> dict:
-#     """
-#         updates the provider of given ID.
-#     """
-#     provider_data = open_for_reading()
-#     if provider_data:
-#         encoded_provider = jsonable_encoder(provider)
-#         provider_data[provider_id] = encoded_provider
-#         open_for_writing(data=provider_data)
-#         return encoded_provider
-#     else:
-#         return {"message": "data not updated"}
 
 
