@@ -108,9 +108,7 @@ def render_selection_menu(request: Request):
 
 @app.post("/select_update_provider")
 def render_update_form(request: Request, provider_id:UUID = Form(...)):
-
     provider_data = open_for_reading()
-    print(type(provider_id))
     data_to_update = provider_data[str(provider_id)]
 
     return templates.TemplateResponse("updation_form.html", {"request": request, "provider_id": provider_id, "provider_data": data_to_update})

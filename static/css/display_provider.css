@@ -1,0 +1,33 @@
+.provider{
+    display: flex;
+    height: 750px;
+    flex-direction: column;
+    background-color: rgb(98, 208, 216);
+    margin-left: 10%;
+    margin-right: 10%;
+    border-radius: 20px;
+}
+
+.provider-details{
+    align-self: center;
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    width: 50%;
+    background-color: rgb(97, 152, 156);
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-block: 10px;
+}
+
+.provider-details:nth-last-of-type(2n){
+    align-self: center;
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    width: 50%;
+    background-color: rgb(85, 126, 129);
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-block: 10px;
+}

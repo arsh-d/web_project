@@ -5,9 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/creation_form.css') }}">
 </head>
 <body>
-    <div>
+    <div class="form-container">
         <form action="/create_provider_form" method="post">
             <!-- provider_id:UUID = Form(...),
             name:str = Form(...),
@@ -19,17 +20,49 @@
             location:str = Form(...),
             address:str = Form(...),
             active:bool = Form): -->
-            <div><input name=provider_id type="text" value="3fa85f64-5717-4562-b3fc-2c963f66afa6" required></div>
-            <div><input type="text" name="name" placeholder="name" required></div>
-            <div><input type="text" name="qualification" placeholder="qualification" required></div>
-            <div><input type="text" name="speciality" placeholder="speciality" required></div>
-            <div><input type="text" name="phone" placeholder="phone" required></div>
-            <div><input type="text" name="department" placeholder="department"></div>
-            <div><input type="text" name="organization" placeholder="organization"></div>
-            <div><input type="text" name="location" placeholder="location"></div>
-            <div><input type="text" name="address" placeholder="address" required></div>
-            <div><input type="text" name="active" placeholder="active" value="True" required></div>
-            <div><button type="submit">Submit</button></div>
+            <div class="form-fields">
+                <label class="labels" for="provider_id">provider ID</label>
+                <input class="input-fields" name=provider_id type="text" value="3fa85f64-5717-4562-b3fc-2c963f66afa6" required>
+            </div>
+            <div class="form-fields">
+                <label class="labels" for="name">Name</label>
+                <input class="input-fields" type="text" name="name" placeholder="name" required>
+            </div>
+            <div class="form-fields">
+                <label class="labels" for="qualification">Qualification</label>
+                <input class="input-fields" type="text" name="qualification" placeholder="qualification" required>
+            </div>
+            <div class="form-fields">
+                <label class="labels" for="speciality">Speciality</label>
+                <input class="input-fields" type="text" name="speciality" placeholder="speciality" required>
+            </div>
+            <div class="form-fields">
+                <label class="labels" for="phone">Phone</label>
+                <input class="input-fields" type="text" name="phone" placeholder="phone" required>
+            </div>
+            <div class="form-fields">
+                <label class="labels" for="department">Department</label>
+                <input class="input-fields" type="text" name="department" placeholder="department">
+            </div>
+            <div class="form-fields">
+                <label class="labels" for="organization">Organization</label>
+                <input class="input-fields" type="text" name="organization" placeholder="organization">
+            </div>
+            <div class="form-fields">
+                <label class="labels" for="location">Location</label>
+                <input class="input-fields" type="text" name="location" placeholder="location">
+            </div>
+            <div class="form-fields">
+                <label class="labels" for="address">Address</label>
+                <input class="input-fields" type="text" name="address" placeholder="address" required>
+            </div>
+            <div class="form-fields">
+                <label class="labels" for="active">Active</label>
+                <input class="input-fields" type="text" name="active" placeholder="active" value="True" required>
+            </div>
+            <div class="submit">
+                <button class="submit button " type="submit">Submit</button>
+            </div>
         </form>
     </div>
 </body>

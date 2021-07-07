@@ -11,7 +11,7 @@ def open_for_reading(filename='provider_data.pkl') -> dict:
     with open(filename, 'rb') as file:
         try:
             data = pickle.load(file)
-        except EOFError:
+        except :
             print("reading error")
     return data
 
