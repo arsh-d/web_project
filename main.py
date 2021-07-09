@@ -103,7 +103,8 @@ def delete_provider(provider_id:UUID = Form(...)):
 @app.get("/update_provider_form")
 def render_selection_menu(request: Request):
     provider_data = open_for_reading()
-    return templates.TemplateResponse("update_provider_form.html", {"request": request, "provider_data": provider_data})
+    return templates.TemplateResponse("update_provider_form.html", {"request": request,
+                                                                    "provider_data": provider_data})
 
 
 @app.post("/select_update_provider")
@@ -111,7 +112,9 @@ def render_update_form(request: Request, provider_id:UUID = Form(...)):
     provider_data = open_for_reading()
     data_to_update = provider_data[str(provider_id)]
 
-    return templates.TemplateResponse("updation_form.html", {"request": request, "provider_id": provider_id, "provider_data": data_to_update})
+    return templates.TemplateResponse("updation_form.html", {"request": request,
+                                                             "provider_id": provider_id,
+                                                             "provider_data": data_to_update})
 
 
 
