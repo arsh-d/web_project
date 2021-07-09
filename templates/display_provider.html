@@ -12,11 +12,11 @@
         <!-- {% block provider %}{% endblock %} -->
         {% for provider in provider_data %}
             <div class="provider">
-            <h3 class="provider-details"> {{ provider }} </h3>
+                <h3 class="provider-details"> {{ provider }} </h3>
                 {% for values in provider_data[provider] %}
-                <div class="provider-details">
-                    <h4>{{ values }}</h4><h4>{{ provider_data[provider][values] }}</h4>
-                </div>
+                    <div class="provider-details">
+                        <h4>{{ values }}</h4><h4>{{ provider_data[provider][values] }}</h4>
+                    </div>
                 {% endfor %}
             </div>
                 <br>

@@ -5,11 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/display_provider.css') }}">
 </head>
 <body>
-    <h4>{{ provider_id }}</h4>
-    {% for item in provider_data %}
-        <h5>{{ item }} : {{ provider_data[item] }}</h5>
-    {% endfor %}
+    <div class="provider">
+        <h4 class="provider-details">{{ provider_id }}</h4>
+        {% for item in provider_data %}
+            <div class="provider-details">
+                <h4>{{ item }}</h4><h4>{{ provider_data[item] }}</h4>
+            </div>
+        {% endfor %}
+    </div>
+    
 </body>
 </html>
+
+
+
+<!-- <div class="provider">
+    <h3 class="provider-details"> {{ provider }} </h3>
+    {% for values in provider_data[provider] %}
+        <div class="provider-details">
+            <h4>{{ values }}</h4><h4>{{ provider_data[provider][values] }}</h4>
+        </div>
+    {% endfor %}
+</div> -->

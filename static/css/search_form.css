@@ -1,0 +1,20 @@
+.main-container{
+    display: flex;
+    justify-content: center;
+}
+
+.form-container{
+    background-color: rgb(167, 245, 255);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    border-radius: 15px;
+}
+
+.btn{
+    align-self: center;
+    margin-top: 20px;
+    width: 60px;
+    
+}
