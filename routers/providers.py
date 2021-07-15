@@ -17,6 +17,7 @@ def read_root() -> dict:
     else:
         return {"message": "database empty"}
 
+
 @router.get("/{provider_id}")
 def get_by_ID(provider_id: str) -> dict:
     """ 
@@ -34,15 +35,12 @@ def push_data(provider: create_provider) -> dict:
     """
         inserts new provider into the dictionary.
     """
-    # provider_data = {}
     provider_data = open_for_reading()
     if provider_data:
         new_id = str(provider.providerID)
         new_dict = provider.dict()
         new_dict.pop('providerID')
         provider_data[new_id] = new_dict
-        #provider_data[provider.providerID] = {key:val for key, val in new_dict.items() if key != provider.providerID}
-        #provider_data.append(provider.dict())
         open_for_writing(data=provider_data)
         return {"provider": provider.dict()}
     else:
@@ -54,12 +52,11 @@ def delete_provider(provider_id: str) -> dict:
     """
         delete the provider of given ID.
     """
-    
     provider_data = open_for_reading()
     if provider_data:
         del_data = provider_data.pop(provider_id)
         open_for_writing(data=provider_data)
-        return {"msg": "post has been deleted",
+        return {"message": "post has been deleted",
                 "provider": del_data}
     else:
         return {"message": "error in deleting"}

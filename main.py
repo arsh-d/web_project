@@ -10,62 +10,81 @@ app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
 app.mount("/static",StaticFiles(directory="static"), name="static")
-
 app.include_router(providers.router)
+
+
 
 @app.get("/")
 def home(request: Request):
-    message = "hello"
-    return templates.TemplateResponse("index.html", {'request': request,
-                                                     'message': message})
+    return templates.TemplateResponse("index.html", {'request': request})
 
 
 @app.get("/providers")
 def read_root(request: Request) -> list:
     """
-        returns the entire dictionary.
+    returns the entire dictionary
     """
     provider_data = open_for_reading()
     if provider_data:
-        return templates.TemplateResponse("display_provider.html", {"request": request, 
-                                                                    "provider_data": provider_data})
+        return templates.TemplateResponse("display_provider.html", {
+            "request": request, 
+            "provider_data": provider_data
+            })
     else:
         return {"message": "database empty"}
 
+
 @app.get("/provider_search_form")
-def search(request: Request):
-    """renders the page for entering providerID"""
+def render_search_form(request: Request):
+    """
+    renders the page for entering providerID
+    """
     return templates.TemplateResponse("search_form.html", {"request": request})
+
 
 @app.post("/search_provider")
 def search_provider(request: Request, provider_id:UUID = Form(...)):
-    """renders details of the given provider with it ID"""
+    """
+    renders details of the given provider with it ID
+    """
     provider_data = open_for_reading()
     try :
         data = provider_data[str(provider_id)]
     except KeyError:
         return {"message": "invalid provider ID"}
-    return templates.TemplateResponse("provider_details.html", {"request": request,
-                                                                "provider_id": provider_id,
-                                                                "provider_data": data})
+    return templates.TemplateResponse("provider_details.html", {
+        "request": request,
+        "provider_id": provider_id,
+        "provider_data": data
+        })
+
+
 
 @app.get("/create_provider_form")
 def render_creation_form(request: Request):
+    """
+    displays form for entering provider data
+    """
     return templates.TemplateResponse("creation_form.html",{'request': request})
 
 
 @app.post("/create_provider_form")
-def create_provider(provider_id:UUID = Form(...),
-                    name:str = Form(...),
-                    qualification:str = Form(...),
-                    speciality:str = Form(...),
-                    phone:str = Form(...),
-                    department:Optional[str] = Form("N/A"),
-                    organization:str = Form(...),
-                    location:Optional[str] = Form("N/A"),
-                    address:str = Form(...),
-                    active:bool = Form(...)):
-    
+def create_provider(
+    provider_id:UUID = Form(...),
+    name:str = Form(...),
+    qualification:str = Form(...),
+    speciality:str = Form(...),
+    phone:str = Form(...),
+    department:Optional[str] = Form("N/A"),
+    organization:str = Form(...),
+    location:Optional[str] = Form("N/A"),
+    address:str = Form(...),
+    active:bool = Form(...)
+    ):
+    """
+    creating new user and saving the data
+    """
+
     post_data = {
         "name": name,
         "qualification": qualification,
@@ -78,57 +97,86 @@ def create_provider(provider_id:UUID = Form(...),
         "active": active
         }
     provider_data = open_for_reading()
-    provider_data[str(provider_id)] = post_data
-    open_for_writing(data=provider_data)
+    if str(provider_id) in provider_data.keys():
+        response = {"message": "ID already exists"}
+    else:
+        provider_data[str(provider_id)] = post_data
+        open_for_writing(data=provider_data)
+        response = {"message": "provider created"}
 
-    return {'msg': 'updated'}
+    return response
+
 
 
 @app.get("/delete_provider_form")
 def render_deletion_form(request: Request):
+    """
+    displays the dropdown list for seleting user to delete
+    """
     provider_data = open_for_reading()
-    return templates.TemplateResponse("deletion_form.html", {'request': request, "provider_data": provider_data})
+    return templates.TemplateResponse("deletion_form.html", {
+        "request": request,
+        "provider_data": provider_data
+        })
+
 
 @app.post("/delete_provider")
 def delete_provider(provider_id:UUID = Form(...)):
+    """
+    deleting the provider
+    """
     provider_data = open_for_reading()
-    if provider_data:
+    if provider_data and str(provider_id) in provider_data.keys():
         del_data = provider_data.pop(str(provider_id))
         open_for_writing(data=provider_data)
-        return {"data": del_data}
-    return {'data': f'invalid ID : {provider_id}'}
+        return {"message": del_data}
+    return {"message": f'invalid ID : {provider_id}'}
 
 
 
 @app.get("/update_provider_form")
 def render_selection_menu(request: Request):
+    """
+    displays dropdown to select provider to update
+    """
     provider_data = open_for_reading()
-    return templates.TemplateResponse("update_provider_form.html", {"request": request,
-                                                                    "provider_data": provider_data})
+    return templates.TemplateResponse("update_provider_form.html", {
+        "request": request,
+        "provider_data": provider_data
+        })
 
 
 @app.post("/select_update_provider")
 def render_update_form(request: Request, provider_id:UUID = Form(...)):
+    """
+    renders the updation form
+    """
     provider_data = open_for_reading()
-    data_to_update = provider_data[str(provider_id)]
+    if str(provider_id) in provider_data.keys():
+        data_to_update = provider_data[str(provider_id)]
 
-    return templates.TemplateResponse("updation_form.html", {"request": request,
-                                                             "provider_id": provider_id,
-                                                             "provider_data": data_to_update})
-
+    return templates.TemplateResponse("updation_form.html", {
+        "request": request,
+        "provider_id": provider_id,
+        "provider_data": data_to_update})
 
 
 @app.post("/update_provider")
-def update_provider(provider_id:UUID = Form(...),
-                    name:str = Form(...),
-                    qualification:str = Form(...),
-                    speciality:str = Form(...),
-                    phone:str = Form(...),
-                    department:Optional[str] = Form("N/A"),
-                    organization:str = Form(...),
-                    location:Optional[str] = Form("N/A"),
-                    address:str = Form(...),
-                    active:bool = Form(...)):
+def update_provider(
+    provider_id:UUID = Form(...),
+    name:str = Form(...),
+    qualification:str = Form(...),
+    speciality:str = Form(...),
+    phone:str = Form(...),
+    department:Optional[str] = Form("N/A"),
+    organization:str = Form(...),
+    location:Optional[str] = Form("N/A"),
+    address:str = Form(...),
+    active:bool = Form(...)
+    ):
+    """
+    updates the provider details filled in the form
+    """
 
     post_data = {
         "name": name,
