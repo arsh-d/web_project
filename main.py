@@ -5,6 +5,7 @@ from models import open_for_reading, open_for_writing
 from fastapi.templating import Jinja2Templates
 from routers import providers
 from fastapi.staticfiles import StaticFiles
+import uvicorn
 
 app = FastAPI()
 
@@ -48,15 +49,18 @@ def search_provider(request: Request, provider_id:UUID = Form(...)):
     renders details of the given provider with it ID
     """
     provider_data = open_for_reading()
-    try :
-        data = provider_data[str(provider_id)]
-    except KeyError:
-        return {"message": "invalid provider ID"}
-    return templates.TemplateResponse("provider_details.html", {
-        "request": request,
-        "provider_id": provider_id,
-        "provider_data": data
-        })
+    if provider_data:
+        try :
+            data = provider_data[str(provider_id)]
+        except KeyError:
+            return {"message": "invalid provider ID"}
+        return templates.TemplateResponse("provider_details.html", {
+            "request": request,
+            "provider_id": provider_id,
+            "provider_data": data
+            })
+    else: 
+        return {"message": "database error"}
 
 
 
@@ -196,4 +200,5 @@ def update_provider(
 
 
 
-
+if __name__ == "__main__":
+    uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=False, root_path="/")
