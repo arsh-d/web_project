@@ -8,7 +8,7 @@ WORKDIR /
 RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 # expose the port that uvicorn will run the app
-EXPOSE 8000
+#EXPOSE 8000
 # copy the local app/ folder to the /app fodler in the container
 # set the working directory in the container to be the /app
 

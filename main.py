@@ -6,19 +6,30 @@ from fastapi.templating import Jinja2Templates
 from routers import providers
 from fastapi.staticfiles import StaticFiles
 import uvicorn
+from prometheus_client import start_http_server, Summary
+import random
+import time
+from starlette_exporter import PrometheusMiddleware, handle_metrics
+
+
+#REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
 
 app = FastAPI()
-
 templates = Jinja2Templates(directory="templates")
 app.mount("/static",StaticFiles(directory="static"), name="static")
 app.include_router(providers.router)
-
+app.add_middleware(PrometheusMiddleware)
+app.add_route("/metrics", handle_metrics)
 
 
 @app.get("/")
 def home(request: Request):
     return templates.TemplateResponse("index.html", {'request': request})
 
+# @REQUEST_TIME.time()
+# def process_request(t):
+#     """A dummy function that takes some time."""
+#     time.sleep(t)
 
 @app.get("/providers")
 def read_root(request: Request) -> list:
@@ -202,3 +213,9 @@ def update_provider(
 
 if __name__ == "__main__":
     uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=False, root_path="/")
+    # start_http_server(8000)
+
+    # while True:
+    #     process_request(random.random())
+
+
