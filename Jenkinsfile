@@ -3,12 +3,12 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        sh 'pip install -r requirements.txt'
+        sh 'pip3 install -r requirements.txt'
       }
     }
     stage('run') {
       steps {
-        sh 'python main.py'
+        sh 'python3 main.py'
       }   
     }
   }
