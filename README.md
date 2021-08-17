@@ -1,1 +1,1 @@
-<h3> Web Development project with trigger hook test</h3>
+<h3> Web Development project with trigger hook</h3>
